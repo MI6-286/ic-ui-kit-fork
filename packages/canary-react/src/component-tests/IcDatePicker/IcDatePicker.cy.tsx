@@ -527,8 +527,7 @@ describe("IcDatePicker end-to-end, visual regression and a11y tests", () => {
     });
   });
 
-  // Skipped test due to issue generating snapshots
-  it.skip("should render deprecated calendar-only variant", () => {
+  it("should render deprecated calendar-only variant", () => {
     mount(
       <IcDatePicker
         label={DEFAULT_LABEL}
