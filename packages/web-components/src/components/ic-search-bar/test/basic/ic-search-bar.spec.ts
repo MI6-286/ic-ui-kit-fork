@@ -685,4 +685,76 @@ describe("ic-search-bar search", () => {
 
     expect(page.rootInstance.value).toBe("test");
   });
+
+  it("should submit parent form on icSubmitSearch", async () => {
+    const page = await newSpecPage({
+      components: [SearchBar, Button, Menu, InputContainer, InputLabel],
+      html: `
+        <form id="form" onsubmit=>
+          <ic-search-bar label="Test label" value="test"></ic-search-bar>
+        </form>
+      `,
+    });
+
+    // IcButton should contain HTML button with type="submit"
+    const submitButton =
+      page.root?.shadowRoot?.querySelector<HTMLIcButtonElement>(
+        "#search-submit-button"
+      );
+    expect(
+      submitButton?.shadowRoot
+        ?.querySelector<HTMLButtonElement>('[aria-label="Search"]')
+        ?.getAttribute("type")
+    ).toBe("submit");
+
+    const clickEvCallback = jest.fn((ev) => {
+      ev;
+    });
+    const hiddenFormButton = page.body.querySelector<HTMLButtonElement>(
+      "#hidden-form-button"
+    );
+    hiddenFormButton?.addEventListener("click", clickEvCallback);
+
+    submitButton?.click();
+
+    // LightDOM button should be created with type="submit" and clicked
+    expect(hiddenFormButton?.getAttribute("type")).toBe("submit"); // will submit form
+    expect(clickEvCallback).toHaveBeenCalled();
+  });
+
+  it("should not submit parent form on icSubmitSearch if preventFormSubmitOnSearch is true", async () => {
+    const page = await newSpecPage({
+      components: [SearchBar, Button, Menu, InputContainer, InputLabel],
+      html: `
+        <form id="form">
+          <ic-search-bar prevent-form-submit-on-search="true" label="Test label" value="test"></ic-search-bar>
+        </form>
+      `,
+    });
+
+    // IcButton should contain HTML button with type="button"
+    const submitButton =
+      page.root?.shadowRoot?.querySelector<HTMLIcButtonElement>(
+        "#search-submit-button"
+      );
+    expect(
+      submitButton?.shadowRoot
+        ?.querySelector<HTMLButtonElement>('[aria-label="Search"]')
+        ?.getAttribute("type")
+    ).toBe("button");
+
+    const clickEvCallback = jest.fn((ev) => {
+      ev;
+    });
+    const hiddenFormButton = page.body.querySelector<HTMLButtonElement>(
+      "#hidden-form-button"
+    );
+    hiddenFormButton?.addEventListener("click", clickEvCallback);
+
+    submitButton?.click();
+
+    // LightDOM button should be created with type="button" and clicked
+    expect(hiddenFormButton?.getAttribute("type")).toBe("button"); // will not submit form
+    expect(clickEvCallback).toHaveBeenCalled();
+  });
 });
