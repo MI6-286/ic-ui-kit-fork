@@ -1,1 +1,1 @@
-Temp file to create folder
+Temp file to create cypress-lighthouse-reports folder
