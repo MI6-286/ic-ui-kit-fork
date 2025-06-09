@@ -1,1 +1,1 @@
-Temp file to create folder for reports
+Temp file to create lighthouse reports folder
