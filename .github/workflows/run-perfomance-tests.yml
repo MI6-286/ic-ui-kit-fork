@@ -4,8 +4,6 @@ permissions: read-all
 on: 
     schedule:
         - cron: '0 03 * * *' # Runs every day at 03:00 UTC
-        branches:
-            - develop
     workflow_dispatch: # Allow manual triggering
 
 concurrency:
