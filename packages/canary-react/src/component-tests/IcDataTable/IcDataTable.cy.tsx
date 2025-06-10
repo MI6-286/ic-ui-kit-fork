@@ -1204,6 +1204,40 @@ describe("IcDataTables", () => {
     });
   });
 
+  it("should show tooltips on action elements", () => {
+    mount(
+      <IcDataTable
+        columns={COLS}
+        data={ACTION_DATA_ELEMENTS}
+        caption="Data tables"
+      ></IcDataTable>
+    );
+
+    cy.checkHydrated(DATA_TABLE_SELECTOR);
+
+    cy.findShadowEl(DATA_TABLE_SELECTOR, "td")
+      .eq(0)
+      .find("span")
+      .should(HAVE_CLASS, ACTION_ELEMENT)
+      .find(IC_BUTTON_SELECTOR)
+      .eq(1)
+      .shadow()
+      .find("button")
+      .realHover();
+
+    cy.checkA11yWithWait(undefined, 1000);
+
+    cy.compareSnapshot({
+      name: "/action-elements-tooltip",
+      testThreshold: setThresholdBasedOnEnv(DEFAULT_THRESHOLD + 0.045),
+      cypressScreenshotOptions: {
+        capture: "viewport",
+      },
+    });
+
+    cy.get("body").realHover({ position: "bottomLeft" }); // Removes hover from upcoming tests, to not trigger the hover state unintentionally
+  });
+
   it("should not render an element in the table cell if the data prop does not contain the actionElement key", () => {
     mount(
       <IcDataTable
@@ -4263,7 +4297,7 @@ describe("IcDataTable table with descriptions", () => {
 
     cy.checkA11yWithWait();
     cy.compareSnapshot({
-      name: "cell-descriptions-icons",
+      name: "/cell-descriptions-icons",
       testThreshold: setThresholdBasedOnEnv(DEFAULT_THRESHOLD + 0.153),
       cypressScreenshotOptions: {
         capture: "viewport",
@@ -5349,7 +5383,9 @@ describe("Dark mode", () => {
     });
   });
 
-  it("should render cell descriptions and icons in dark mode", () => {
+  // test skipped as seems to be getting light hover styling applied
+  // this will be investigated in #3525
+  it.skip("should render cell descriptions and icons in dark mode", () => {
     mount(
       <IcDataTable
         columns={COLS}
@@ -5359,9 +5395,14 @@ describe("Dark mode", () => {
       />
     );
 
-    // cy.checkA11yWithWait();
+    cy.checkA11yWithWait();
+    //triggers a mouse down event on header to prevent hover styling on data row
+    cy.findShadowEl(DATA_TABLE_SELECTOR, "th.column-header")
+      .eq(0)
+      .realMouseDown();
+
     cy.compareSnapshot({
-      name: "dark-mode-cell-descriptions-icons",
+      name: "/dark-mode-cell-descriptions-icons",
       testThreshold: setThresholdBasedOnEnv(DEFAULT_THRESHOLD + 0.163),
       cypressScreenshotOptions: {
         capture: "viewport",
