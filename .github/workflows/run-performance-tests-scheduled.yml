@@ -3,7 +3,7 @@ permissions: read-all
 
 on: 
     schedule:
-        - cron: '0 03 * * *' # Runs every day at 03:00 UTC
+        - cron: '0 02 * * *' # Runs every day at 02:00 UTC
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
