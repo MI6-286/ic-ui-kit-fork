@@ -26,6 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          google-chrome --version
           npm ci
           npm run bootstrap -- -- --ci
 
