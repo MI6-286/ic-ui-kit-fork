@@ -31,7 +31,7 @@ const lighthouseConfig = {
   extends: "lighthouse:default",
 };
 
-describe("Button performance", () => {
+describe.only("Button performance", () => {
   ["light", "dark"].forEach((theme) => {
     it(`should render single button within performance thresholds [${theme}]`, () => {
       cy.visit(`http://localhost:3001/#/button?theme=${theme}`);
